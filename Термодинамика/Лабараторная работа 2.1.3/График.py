@@ -21,6 +21,7 @@ sr_k_kv = sum(k**2)/5
 sr_kv_k = sr_k**2
 k1 = (sr_kdf1 - sr_k*sr_df1)/(sr_k_kv - sr_kv_k)
 sigma_angle_1 = (1/(5**0.5))*(((sr_df1_kv - sr_kv_df1)/(sr_k_kv - sr_kv_k) - k1**2)**0.5)
+
 print("1", k1, sigma_angle_1)
 
 sr_df2 = sum(df2)/5

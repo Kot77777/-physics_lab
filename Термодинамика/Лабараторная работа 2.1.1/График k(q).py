@@ -15,7 +15,6 @@ k1 = (sr_qk - sr_q*sr_k)/(sr_q_kv1 - sr_kv_q)
 sigma_angle_1 = (1/(6**0.5))*(((sr_k_kv - sr_kv_k)/(sr_q_kv1 - sr_kv_q) - k1**2)**0.5)
 sigma_R01 = sigma_angle_1*(sr_q_kv1 - sr_kv_q)**0.5
 
-
 fig, ax = plt.subplots()
 
 t = np.polyfit(q, k,  1)
