@@ -16,3 +16,12 @@ def solution(x, y):
     sigma_b = sigma_k * (sr_x_kv - sr_kv_x) ** 0.5
 
     return [k, b, sigma_k, sigma_b]
+
+def slych_pogr(x):
+    size = len(x)
+
+    sr_x = sum(x) / size
+    sigma = ((1 / size / (size - 1))*sum([(i - sr_x)**2 for i in x]))**0.5
+
+    return sigma
+
