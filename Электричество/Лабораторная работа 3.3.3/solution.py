@@ -1,13 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from pogr_koef import slych_pogr
+from statsmodels.sandbox.distributions.mv_normal import np_pi
+
 
 rho = 898
 l = 0.725e-2
 n = 1.85e-5
 g = 9.81
 h = 0.25e-3
-dh = h/4
+dh = h/10
 dt = dt0 = 0.4
 
 def calculate_solution(time_up, time_down, U):
@@ -18,7 +19,7 @@ def calculate_solution(time_up, time_down, U):
         q.append(9*3.14*(l/U)*((2/rho/g)**0.5)*((n*h)**1.5)*((time_up[i] + time_down[i])/(time_down[i]**1.5)/time_up[i]))
         dU = U * 0.05
 
-        err_q_ar.append(q[i] * (((dU/U)**2 + 2.25*(h**0.5)*dh**2 + (dt*(time_down[i] / time_up[i] / (time_down[i] + time_up[i])))**2 +
+        err_q_ar.append(q[i] * (((dU/U)**2 + 2.25*(dh/h)**2 + (dt*(time_down[i] / time_up[i] / (time_down[i] + time_up[i])))**2 +
                         ((dt0*(3*time_up[i] + time_down[i])/4/time_down[i])/(time_down[i]+time_up[i])))**0.5))
 
     err_d_np = np.array(err_q_ar)
@@ -53,8 +54,35 @@ for i in range(len(time_up)):
     q_arr.append(solut[0])
     err_arr.append(solut[1])
 
-print(q_arr)
-print(err_arr)
+for i in range(len(q_arr)):
+    print('q = ', round(q_arr[i], 23), 'Кл')
+    print('Error: ', err_arr[i]*100, '%')
+    print('Абсолютная погрешность: ', err_arr[i]*q_arr[i], 'Кл')
+    print('==========================')
+print('==========================')
+
+r = (9*n*h/2/rho/g/15.92)**0.5
+err_r = 0.5*((dh/h)**2 + (dt/15.92)**2)**0.5
+print('r = ', r, 'м')
+print('Error: ', err_r*100, '%')
+print('Aбсольтная погрешнотсть: ', err_r*r, 'м')
+
+print('==========================')
+
+k = 6*np_pi*n*r
+tau = 2*rho*(r**2)/9/n
+err_tau = 2 * err_r
+print('t = ', tau, 'c')
+print('Error: ', err_tau*100, '%')
+print('Aбсольтная погрешнотсть: ', err_tau*tau, 'c')
+
+print('==========================')
+
+s = (1/g)*((h/15.92)**2)
+err_s = 2*((dh/h)**2 + (dt/15.92)**2)**0.5
+print('s = ', s, 'м')
+print('Error: ', err_s*100, '%')
+print('Aбсольтная погрешнотсть: ', err_s*s, 'м')
 
 # Добавляем полупрозрачные области для значений, кратных заряду электрона
 electron_charge = 1.6e-19
@@ -68,7 +96,6 @@ plt.ylim(0, 4e-19)  # Увеличиваем область отображени
 
 plt.errorbar(q_arr, q_arr, yerr=np.array(err_arr)*np.array(q_arr), fmt='o', color='black', capsize=5, linestyle='None', label='Заряд капли')
 
-print(np.array(err_arr)*np.array(q_arr))
 # Настраиваем сетку
 plt.grid(True)
 plt.grid(which='both', color='gray', linestyle='--', linewidth=0.5)
